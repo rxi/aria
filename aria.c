@@ -46,7 +46,7 @@ static void push_value_to_stack(ar_State *S, ar_Value *v) {
 }
 
 
-ar_Value *ar_new_value(ar_State *S, int type) {
+static ar_Value *new_value(ar_State *S, int type) {
   ar_Value *v;
   /* Run garbage collector? */
   S->gc_count--;
@@ -80,7 +80,7 @@ ar_Value *ar_new_value(ar_State *S, int type) {
 
 
 ar_Value *ar_new_env(ar_State *S, ar_Value *parent) {
-  ar_Value *res = ar_new_value(S, AR_TENV);
+  ar_Value *res = new_value(S, AR_TENV);
   res->u.env.parent = parent;
   res->u.env.map = NULL;
   return res;
@@ -88,7 +88,7 @@ ar_Value *ar_new_env(ar_State *S, ar_Value *parent) {
 
 
 ar_Value *ar_new_pair(ar_State *S, ar_Value *car, ar_Value *cdr) {
-  ar_Value *res = ar_new_value(S, AR_TPAIR);
+  ar_Value *res = new_value(S, AR_TPAIR);
   res->u.pair.car = car;
   res->u.pair.cdr = cdr;
   res->u.pair.dbg = NULL;
@@ -109,14 +109,14 @@ ar_Value *ar_new_list(ar_State *S, size_t n, ...) {
 
 
 ar_Value *ar_new_number(ar_State *S, double n) {
-  ar_Value *res = ar_new_value(S, AR_TNUMBER);
+  ar_Value *res = new_value(S, AR_TNUMBER);
   res->u.num.n = n;
   return res;
 }
 
 
 ar_Value *ar_new_udata(ar_State *S, void *ptr, ar_CFunc gc, ar_CFunc mark) {
-  ar_Value *res = ar_new_value(S, AR_TUDATA);
+  ar_Value *res = new_value(S, AR_TUDATA);
   res->u.udata.ptr = ptr;
   res->u.udata.gc = gc;
   res->u.udata.mark = mark;
@@ -125,7 +125,7 @@ ar_Value *ar_new_udata(ar_State *S, void *ptr, ar_CFunc gc, ar_CFunc mark) {
 
 
 ar_Value *ar_new_stringl(ar_State *S, const char *str, size_t len) {
-  ar_Value *v = ar_new_value(S, AR_TSTRING);
+  ar_Value *v = new_value(S, AR_TSTRING);
   v->u.str.s = NULL;
   v->u.str.s = zrealloc(S, NULL, len + 1);
   v->u.str.s[len] = '\0';
@@ -158,14 +158,14 @@ ar_Value *ar_new_symbol(ar_State *S, const char *name) {
 
 
 ar_Value *ar_new_cfunc(ar_State *S, ar_CFunc fn) {
-  ar_Value *v = ar_new_value(S, AR_TCFUNC);
+  ar_Value *v = new_value(S, AR_TCFUNC);
   v->u.cfunc.fn = fn;
   return v;
 }
 
 
 ar_Value *ar_new_prim(ar_State *S, ar_Prim fn) {
-  ar_Value *v = ar_new_value(S, AR_TPRIM);
+  ar_Value *v = new_value(S, AR_TPRIM);
   v->u.prim.fn = fn;
   return v;
 }
@@ -518,7 +518,7 @@ static ar_Value *new_mapnode(ar_State *S, ar_Value *k, ar_Value *v) {
   /* The pair for the node is created *first* as this may trigger garbage
    * collection which expects all values to be in an intialised state */
   ar_Value *p = ar_new_pair(S, k, v);
-  ar_Value *x = ar_new_value(S, AR_TMAPNODE);
+  ar_Value *x = new_value(S, AR_TMAPNODE);
   x->u.map.left = x->u.map.right = NULL;
   x->u.map.pair = p;
   return x;
@@ -606,7 +606,7 @@ static ar_Value *parse(ar_State *S, const char **str) {
           *last = ar_new_pair(S, v, NULL);
           if (first) {
             /* This is the first pair in the list, attach debug info */
-            ar_Value *dbg = ar_new_value(S, AR_TDBGINFO);
+            ar_Value *dbg = new_value(S, AR_TDBGINFO);
             dbg->u.dbg.name = S->parse_name;
             dbg->u.dbg.line = S->parse_line;
             (*last)->u.pair.dbg = dbg;
@@ -636,7 +636,7 @@ static ar_Value *parse(ar_State *S, const char **str) {
       /* Fall through */
     case '1': case '2': case '3': case '4': case '5':
     case '6': case '7': case '8': case '9': case '0':
-      res = ar_new_value(S, AR_TNUMBER);
+      res = new_value(S, AR_TNUMBER);
       sscanf(p, "%lf", &res->u.num.n);
       break;
 
@@ -887,7 +887,7 @@ static ar_Value *p_fn(ar_State *S, ar_Value *args, ar_Value *env) {
     }
   }
   /* Init function */
-  v = ar_new_value(S, AR_TFUNC);
+  v = new_value(S, AR_TFUNC);
   v->u.func.params = ar_car(args);
   v->u.func.body = ar_cdr(args);
   v->u.func.env = env;

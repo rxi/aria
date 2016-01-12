@@ -119,7 +119,6 @@ ar_CFunc ar_at_panic(ar_State *S, ar_CFunc fn);
 void ar_error(ar_State *S, ar_Value *err);
 void ar_error_str(ar_State *S, const char *fmt, ...);
 
-ar_Value *ar_new_value(ar_State *S, int type);
 ar_Value *ar_new_env(ar_State *S, ar_Value *parent);
 ar_Value *ar_new_pair(ar_State *S, ar_Value *car, ar_Value *cdr);
 ar_Value *ar_new_list(ar_State *S, size_t n, ...);
