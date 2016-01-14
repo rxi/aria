@@ -56,8 +56,8 @@
 
   (= rand (let (seed 0)
     (fn (n)
-      (= seed (mod (+ (* seed 196561) 1374) 0x7fffffff))
-      (if n (mod seed n) (/ seed 0x7fffffff)))))
+      (= seed (mod (+ (* seed 196561) 1374) 2147483647))
+      (if n (mod seed n) (/ seed 2147483647)))))
 
   (= abs (fn (n)
     (if (< n 0) (- 0 n) n)))
