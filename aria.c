@@ -572,7 +572,8 @@ ar_Value *ar_set(ar_State *S, ar_Value *sym, ar_Value *v, ar_Value *env) {
  * Parser
  *===========================================================================*/
 
-#define WHITESPACE " \n\t\r"
+#define WHITESPACE  " \n\t\r"
+#define DELIMITER   (WHITESPACE "();")
 
 static ar_Value parse_end;
 
@@ -628,16 +629,14 @@ static ar_Value *parse(ar_State *S, const char **str) {
       *str = p + strcspn(p, "\n");
       return parse(S, str);
 
-    case '.':
-    case '-':
-      if ((p[1] < '0' || p[1] > '9') && !(p[0] == '-' && p[1] == '.')) {
-        goto parse_symbol;
-      }
-      /* Fall through */
+    case '.': case '-':
     case '1': case '2': case '3': case '4': case '5':
     case '6': case '7': case '8': case '9': case '0':
-      res = new_value(S, AR_TNUMBER);
-      sscanf(p, "%lf", &res->u.num.n);
+      res = ar_new_number(S, strtod(p, &q));
+      /* Not a valid number? treat as symbol */
+      if ( *q && !strchr(DELIMITER, *q) ) {
+        goto parse_symbol;
+      }
       break;
 
     case '"':
@@ -669,7 +668,7 @@ static ar_Value *parse(ar_State *S, const char **str) {
 
     default:
 parse_symbol:
-      *str = p + strcspn(p, "();" WHITESPACE);
+      *str = p + strcspn(p, DELIMITER);
       i = *str - p;
       if (i >= sizeof(buf)) i = sizeof(buf) - 1;
       memcpy(buf, p, i);
@@ -678,7 +677,7 @@ parse_symbol:
       return ar_new_symbol(S, buf);
   }
 
-  *str = p + strcspn(p, "();" WHITESPACE);
+  *str = p + strcspn(p, DELIMITER);
   return res;
 }
 
