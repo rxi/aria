@@ -357,13 +357,12 @@ void *ar_to_udata(ar_State *S, ar_Value *v) {
 
 
 double ar_to_number(ar_State *S, ar_Value *v) {
-  double x = 0;
   UNUSED(S);
   switch (ar_type(v)) {
-    case AR_TNUMBER : x = v->u.num.n;                 break;
-    case AR_TSTRING : sscanf(v->u.str.s, "%lf", &x);  break;
+    case AR_TNUMBER : return v->u.num.n;
+    case AR_TSTRING : return strtod(v->u.str.s, NULL);
   }
-  return x;
+  return 0;
 }
 
 
