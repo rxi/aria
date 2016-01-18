@@ -1363,11 +1363,9 @@ void ar_error(ar_State *S, ar_Value *err) {
     while (S->frame != &S->base_frame) pop_frame(S, args);
     S->panic(S, args);
   } else {
-    if (err == S->oom_error) {
-      printf("error: %s\n", ar_to_string(S, err));
-    } else {
+    printf("error: %s\n", ar_to_string(S, err));
+    if (err != S->oom_error) {
       ar_Value *v = traceback(S, &S->base_frame);
-      printf("error: %s\n", ar_to_string(S, err));
       printf("traceback:\n");
       while (v) {
         printf("  [%s] %.50s\n", ar_to_string(S, debug_location(S, ar_car(v))),
