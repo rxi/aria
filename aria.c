@@ -540,10 +540,12 @@ static ar_Value **get_map_ref(ar_Value **m, ar_Value *k) {
 }
 
 
-static ar_Value *get_bound_value(ar_State *S, ar_Value *sym, ar_Value *env) {
-  ar_Value *x = *get_map_ref(&env->u.env.map, sym);
-  if (x) return x->u.map.pair->u.pair.cdr;
-  if (env->u.env.parent) return get_bound_value(S, sym, env->u.env.parent);
+static ar_Value *get_bound_value(ar_Value *sym, ar_Value *env) {
+  do {
+    ar_Value *x = *get_map_ref(&env->u.env.map, sym);
+    if (x) return x->u.map.pair->u.pair.cdr;
+    env = env->u.env.parent;
+  } while (env);
   return NULL;
 }
 
@@ -792,7 +794,7 @@ ar_Value *ar_eval(ar_State *S, ar_Value *v, ar_Value *env) {
 
   switch (ar_type(v)) {
     case AR_TPAIR   : break;
-    case AR_TSYMBOL : return get_bound_value(S, v, env);
+    case AR_TSYMBOL : return get_bound_value(v, env);
     default         : return v;
   }
 
