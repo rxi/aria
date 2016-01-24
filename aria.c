@@ -1416,7 +1416,7 @@ int main(int argc, char **argv) {
     /* Init REPL */
     printf("aria " AR_VERSION "\n");
     ar_do_string(S, "(while t (pcall "
-                    "  (fn () (print (eval (parse (readline))))) "
+                    "  (fn () (print (eval (parse (readline)) global))) "
                     "  (fn (err tr) "
                     "    (print \"error:\" err) "
                     "    (print \"traceback:\") "
