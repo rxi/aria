@@ -15,7 +15,7 @@
 #include <setjmp.h>
 #include <ctype.h>
 
-#define AR_VERSION "0.1.0"
+#define AR_VERSION "0.1.1"
 
 typedef struct ar_Value ar_Value;
 typedef struct ar_State ar_State;
