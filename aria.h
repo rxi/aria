@@ -94,7 +94,7 @@ enum {
 #define ar_get_global(S,x)    ar_eval(S, ar_new_symbol(S, x), (S)->global)
 #define ar_bind_global(S,x,v) ar_bind(S, ar_new_symbol(S, x), v, (S)->global)
 #define ar_call_global(S,f,a) ar_call(S, ar_get_global(S, f), a)
-                              
+
 #define ar_check_string(S,v)  ar_to_string(S, ar_check(S, v, AR_TSTRING))
 #define ar_check_udata(S,v)   ar_to_udata(S, ar_check(S, v, AR_TUDATA))
 #define ar_check_number(S,v)  ar_to_number(S, ar_check(S, v, AR_TNUMBER))

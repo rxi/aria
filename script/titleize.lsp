@@ -12,4 +12,3 @@
 
 
   (print (titleize "hello world"))) ; prints "Hello World"
-

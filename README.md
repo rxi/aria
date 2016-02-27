@@ -3,7 +3,7 @@ A *tiny*, easily embeddable lisp-shaped language implemented in C89.
 
 ```lisp
 (do
-  
+
   (= fib (fn (n)
     (if (>= n 2)
         (+ (fib (- n 1)) (fib (- n 2)))

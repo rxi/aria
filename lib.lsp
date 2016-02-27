@@ -151,11 +151,11 @@
 
   (= any (fn (f lst)
     (if (find* f lst) t)))
-            
+
   (= all (fn (f lst)
     (let (res t)
       (while lst
-        (if (not (f (car lst))) 
+        (if (not (f (car lst)))
           (= res nil
              lst nil)
           (= lst (cdr lst))))
@@ -169,7 +169,7 @@
              lst nil)
           (= lst (cdr lst))))
       res)))
-        
+
   (= find (fn (f lst)
     (car (find* f lst))))
 
@@ -263,7 +263,7 @@
 
 
   ; string
- 
+
   (= join (fn (lst sep)
     (default sep "")
     (apply string
@@ -273,7 +273,7 @@
             (if (isnt x lst) (p sep))
             (p (car x))
             (= x (cdr x)))))))))
-    
+
   (= split (fn (str delim)
     (default delim " ")
     (collect (fn (p)
@@ -307,4 +307,4 @@
   (= trim (fn (str chr)
     (ltrim (rtrim str chr) chr)))
 
-  nil)  
+  nil)

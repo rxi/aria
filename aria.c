@@ -1,4 +1,4 @@
-/** 
+/**
  * Copyright (c) 2016 rxi
  *
  * This library is free software; you can redistribute it and/or modify it
@@ -1424,7 +1424,7 @@ int main(int argc, char **argv) {
                     "      (print (string \"  [\" (dbgloc (car tr)) \"] \" "
                     "                     (substr (string (car tr)) 0 50))) "
                     "      (= tr (cdr tr))))))" );
-                    
+
 
   } else {
     /* Store arguments at global list `argv` */

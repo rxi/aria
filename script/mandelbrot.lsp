@@ -14,7 +14,7 @@
         (let (x0 (+ -2.2 (* (/ 3 width) x))
               y0 (+ -1.5 (* (/ 3 height) y))
               x  0
-              y  0  
+              y  0
               n  16
               i  1
               z  nil)
@@ -25,4 +25,3 @@
                i (+ i 1)))
           (= z (* (/ i n) (- (strlen chars) 1)))
           (p (substr chars z 1))))))))))))
-
