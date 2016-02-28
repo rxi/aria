@@ -562,10 +562,12 @@ ar_Value *ar_bind(ar_State *S, ar_Value *sym, ar_Value *v, ar_Value *env) {
 
 
 ar_Value *ar_set(ar_State *S, ar_Value *sym, ar_Value *v, ar_Value *env) {
-  ar_Value *x = *get_map_ref(&env->u.env.map, sym);
-  if (x) return x->u.map.pair->u.pair.cdr = v;
-  if (env->u.env.parent) return ar_set(S, sym, v, env->u.env.parent);
-  return ar_bind(S, sym, v, env);
+  for (;;) {
+    ar_Value *x = *get_map_ref(&env->u.env.map, sym);
+    if (x) return x->u.map.pair->u.pair.cdr = v;
+    if (!env->u.env.parent) return ar_bind(S, sym, v, env);
+    env = env->u.env.parent;
+  }
 }
 
 
