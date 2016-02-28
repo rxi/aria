@@ -1,4 +1,4 @@
-/** 
+/**
  * Copyright (c) 2016 rxi
  *
  * This library is free software; you can redistribute it and/or modify it
@@ -99,18 +99,18 @@ enum {
 #define ar_check_udata(S,v)   ar_to_udata(S, ar_check(S, v, AR_TUDATA))
 #define ar_check_number(S,v)  ar_to_number(S, ar_check(S, v, AR_TNUMBER))
 
-#define ar_try(S, err_val, blk, err_blk)\
-  do {\
-    jmp_buf err_env__, *old_env__ = (S)->frame->err_env;\
-    S->frame->err_env = &err_env__;\
-    if (setjmp(err_env__)) {\
-      ar_Value *err_val = (S)->err_args;\
-      (S)->frame->err_env = old_env__;\
-      err_blk;\
-    } else {\
-      blk;\
-      (S)->frame->err_env = old_env__;\
-    }\
+#define ar_try(S, err_val, blk, err_blk)                  \
+  do {                                                    \
+    jmp_buf err_env__, *old_env__ = (S)->frame->err_env;  \
+    S->frame->err_env = &err_env__;                       \
+    if (setjmp(err_env__)) {                              \
+      ar_Value *err_val = (S)->err_args;                  \
+      (S)->frame->err_env = old_env__;                    \
+      err_blk;                                            \
+    } else {                                              \
+      blk;                                                \
+      (S)->frame->err_env = old_env__;                    \
+    }                                                     \
   } while (0)
 
 ar_State *ar_new_state(ar_Alloc alloc, void *udata);
