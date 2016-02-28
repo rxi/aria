@@ -366,10 +366,10 @@ double ar_to_number(ar_State *S, ar_Value *v) {
 }
 
 
-#define OPT_FUNC(NAME, CTYPE, TYPE, FIELD)\
-  CTYPE NAME(ar_State *S, ar_Value *v, CTYPE def) {\
-    if (!v) return def;\
-    return ar_check(S, v, TYPE)->FIELD;\
+#define OPT_FUNC(NAME, CTYPE, TYPE, FIELD)          \
+  CTYPE NAME(ar_State *S, ar_Value *v, CTYPE def) { \
+    if (!v) return def;                             \
+    return ar_check(S, v, TYPE)->FIELD;             \
   }
 
 OPT_FUNC( ar_opt_string,  const char*,  AR_TSTRING, u.str.s     )
@@ -1103,15 +1103,15 @@ static ar_Value *f_ord(ar_State *S, ar_Value *args) {
 }
 
 
-#define STRING_MAP_FUNC(NAME, FUNC)\
-  static ar_Value *NAME(ar_State *S, ar_Value *args) {\
-    ar_Value *str = ar_check(S, ar_car(args), AR_TSTRING);\
-    ar_Value *res = ar_new_stringl(S, NULL, str->u.str.len);\
-    size_t i;\
-    for (i = 0; i < res->u.str.len; i++) {\
-      res->u.str.s[i] = FUNC(str->u.str.s[i]);\
-    }\
-    return res;\
+#define STRING_MAP_FUNC(NAME, FUNC)                           \
+  static ar_Value *NAME(ar_State *S, ar_Value *args) {        \
+    ar_Value *str = ar_check(S, ar_car(args), AR_TSTRING);    \
+    ar_Value *res = ar_new_stringl(S, NULL, str->u.str.len);  \
+    size_t i;                                                 \
+    for (i = 0; i < res->u.str.len; i++) {                    \
+      res->u.str.s[i] = FUNC(str->u.str.s[i]);                \
+    }                                                         \
+    return res;                                               \
   }
 
 STRING_MAP_FUNC( f_lower, tolower )
@@ -1157,10 +1157,10 @@ static ar_Value *f_is(ar_State *S, ar_Value *args) {
 }
 
 
-#define NUM_COMPARE_FUNC(NAME, OP)\
-  static ar_Value *NAME(ar_State *S, ar_Value *args) {\
-    return ( ar_check_number(S, ar_car(args)) OP\
-             ar_check_number(S, ar_nth(args, 1)) ) ? S->t : NULL;\
+#define NUM_COMPARE_FUNC(NAME, OP)                                \
+  static ar_Value *NAME(ar_State *S, ar_Value *args) {            \
+    return ( ar_check_number(S, ar_car(args)) OP                  \
+             ar_check_number(S, ar_nth(args, 1)) ) ? S->t : NULL; \
   }
 
 NUM_COMPARE_FUNC( f_lt,  <  )
@@ -1169,13 +1169,13 @@ NUM_COMPARE_FUNC( f_lte, <= )
 NUM_COMPARE_FUNC( f_gte, >= )
 
 
-#define NUM_ARITH_FUNC(NAME, OP)\
-  static ar_Value *NAME(ar_State *S, ar_Value *args) {\
-    double res = ar_check_number(S, ar_car(args));\
-    while ( (args = ar_cdr(args)) ) {\
-      res = res OP ar_check_number(S, ar_car(args));\
-    }\
-    return ar_new_number(S, res);\
+#define NUM_ARITH_FUNC(NAME, OP)                        \
+  static ar_Value *NAME(ar_State *S, ar_Value *args) {  \
+    double res = ar_check_number(S, ar_car(args));      \
+    while ( (args = ar_cdr(args)) ) {                   \
+      res = res OP ar_check_number(S, ar_car(args));    \
+    }                                                   \
+    return ar_new_number(S, res);                       \
   }
 
 NUM_ARITH_FUNC( f_add, + )
