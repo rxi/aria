@@ -618,7 +618,7 @@ static ar_Value *parse(ar_State *S, const char **str) {
           last = &(*last)->u.pair.cdr;
         }
       }
-      return res ? res : ar_new_pair(S, NULL, NULL);
+      return res;
 
     case '\'':
       *str = p + 1;
@@ -879,10 +879,10 @@ static ar_Value *p_fn(ar_State *S, ar_Value *args, ar_Value *env) {
   ar_Value *v = ar_car(args);
   int t = ar_type(v);
   /* Type check */
-  if (t != AR_TPAIR && t != AR_TSYMBOL) {
+  if (t && t != AR_TPAIR && t != AR_TSYMBOL) {
     ar_error_str(S, "expected pair or symbol, got %s", ar_type_str(t));
   }
-  if (t == AR_TPAIR && (ar_car(v) || ar_cdr(v))) {
+  if (t == AR_TPAIR) {
     while (v) {
       ar_check(S, ar_car(v), AR_TSYMBOL);
       v = ar_cdr(v);
